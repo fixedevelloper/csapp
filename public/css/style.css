@@ -1,0 +1,35 @@
+.logo-box {
+    height: 70px;
+    width: 240px;
+    background-color: #fff !important;
+    float: left;
+    transition: all .1s ease-out;
+}
+.pagination {
+    display: -ms-flexbox;
+    display: flex;
+    padding-left: 0;
+    list-style: none;
+    border-radius: .3125rem;
+}
+
+.page-item {
+    margin-left: .25rem;
+    margin-right: .25rem;
+}
+.page-item.disabled .page-link {
+    color: #8c98a4;
+    pointer-events: none;
+    cursor: auto;
+    background-color: #fff;
+    border-color: #e7eaf3;
+}
+.page-item:first-child .page-link {
+    margin-left: 0;
+    border-top-left-radius: .3125rem;
+    border-bottom-left-radius: .3125rem;
+}
+.page-item .page-link {
+    border-top-right-radius: .3125rem;
+    border-bottom-right-radius: .3125rem;
+}
