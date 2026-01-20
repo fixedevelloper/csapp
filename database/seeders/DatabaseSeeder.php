@@ -8,7 +8,7 @@ use App\Models\Category;
 use App\Models\Tag;
 use App\Models\Post;
 use Illuminate\Support\Str;
-
+use Illuminate\Support\Facades\File;
 class DatabaseSeeder extends Seeder
 {
     public function run(): void
@@ -143,8 +143,16 @@ class DatabaseSeeder extends Seeder
             );
 
             // Ajouter 1 à 3 images (fictives)
+            $path = storage_path("app/public/blog/600.jpeg");
+            $placeholder = public_path('images/placeholder.jpg');
+
+            if (!File::exists($path)) {
+                File::ensureDirectoryExists(dirname($path));
+                File::copy($placeholder, $path);
+            }
+
             for ($i = 1; $i <= rand(1, 3); $i++) {
-                $post->addMedia(storage_path("app/public/blog/600.jpeg"))
+                $post->addMedia($path)
                     ->preservingOriginal()
                     ->toMediaCollection('posts');
             }
