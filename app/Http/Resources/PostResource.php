@@ -15,7 +15,7 @@ class PostResource extends JsonResource
     public function toArray($request): array
     {
         // Récupère le premier média de la collection 'featured' (ou adapte selon ton modèle)
-        $media = $this->getFirstMedia('featured');
+        $media = $this->getFirstMedia('posts');
 
         return [
             'id' => $this->id,
@@ -27,11 +27,13 @@ class PostResource extends JsonResource
             'comments_count' => $this->comments()->count(),
 
             'comments' => $this->comments,
-            // Image originale ou fallback
-            'image_url' => $media ? $media->getUrl() : '/images/blog/default.jpg',
+            'thumb_url' => $media && $media->hasGeneratedConversion('thumb')
+                ? $media->getUrl('thumb')
+                : '/images/blog/default-thumb.webp',
 
-            // Conversion 'thumb' ou fallback
-            'thumb_url' => $media ? $media->getUrl('thumb') : '/images/blog/default-thumb.jpg',
+            'image_url' => $media
+                ? $media->getUrl('medium')
+                : '/images/blog/default.webp',
 
             // Relations si nécessaire
             'categories' => $this->categories()->pluck('name'),

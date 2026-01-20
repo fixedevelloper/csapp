@@ -67,7 +67,7 @@ class PostManager extends Component
         if ($this->image) {
             $post->addMedia($this->image->getRealPath())
                 ->usingFileName('post-'.time().'.jpg')
-                ->toMediaCollection('image');
+                ->toMediaCollection('posts');
         }
 
         $this->resetForm();
@@ -102,10 +102,10 @@ class PostManager extends Component
         $post->tags()->sync($this->tags);
         $post->categories()->sync($this->categories);
         if ($this->image) {
-            $post->clearMediaCollection('image');
+            $post->clearMediaCollection('posts');
             $post->addMedia($this->image->getRealPath())
                 ->usingFileName('post-'.time().'.jpg')
-                ->toMediaCollection('image');
+                ->toMediaCollection('posts');
         }
 
         $this->resetForm();

@@ -81,6 +81,8 @@ class PostController extends Controller
     /**
      * GET /posts/{slug}
      * Détail d'un post avec cache
+     * @param string $slug
+     * @return \Illuminate\Http\JsonResponse
      */
     public function getPost(string $slug)
     {
@@ -88,19 +90,16 @@ class PostController extends Controller
         $latestLimit = request()->get('limit', 5);
 
         // 🔹 Post principal (cache 1h)
-        $post = Cache::remember("post:{$slug}", 3600, function () use ($slug) {
-            return Post::with(['categories', 'tags', 'user', 'media'])
+        $post =  Post::with(['categories', 'tags', 'user', 'media'])
                 ->where('slug', $slug)
                 ->firstOrFail();
-        });
 
         // 🔹 Derniers articles (cache 30 min)
-        $latestPosts = Cache::remember("latest_posts:{$latestLimit}", 1800, function () use ($latestLimit) {
-            return Post::with(['media', 'categories', 'tags', 'user'])
+        $latestPosts =Post::with(['media', 'categories', 'tags', 'user'])
                 ->latest()
                 ->limit($latestLimit)
                 ->get();
-        });
+
 
         // 🔹 Catégories (cache long)
         $categories = Cache::remember("categories:all", 86400, function () {

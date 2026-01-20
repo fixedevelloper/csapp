@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
+use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
 class Post extends Model implements HasMedia
 {
@@ -52,5 +53,25 @@ class Post extends Model implements HasMedia
     public function scopePublished($query)
     {
         return $query->where('created_at', '<=', now());
+    }
+
+    public function registerMediaConversions(Media $media = null): void
+    {
+        // Thumbnail WebP
+        $this->addMediaConversion('thumb')
+            ->width(400)
+            ->height(250)
+            ->format('webp')
+            ->quality(80)
+            ->sharpen(10)
+            ->nonQueued();
+
+        // Image moyenne WebP
+        $this->addMediaConversion('medium')
+            ->width(800)
+            ->format('webp')
+            ->quality(85)
+            ->nonQueued();
+
     }
 }
