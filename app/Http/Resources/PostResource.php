@@ -25,7 +25,6 @@ class PostResource extends JsonResource
             'content' => $this->content,
             'created_at' => $this->created_at->format('Y-m-d H:i:s'),
             'comments_count' => $this->comments()->count(),
-
             'comments' => $this->comments,
             'thumb_url' => $media && $media->hasGeneratedConversion('thumb')
                 ? $media->getUrl('thumb')
