@@ -27,4 +27,8 @@ Route::group(['prefix' => 'categories', 'as' => 'category.'],function () {
 Route::group(['prefix' => 'posts', 'as' => 'post.'],function () {
     Route::match(array('GET', 'POST'), 'index', [PostController::class, 'index'])
         ->name('index');
+    Route::match(array('GET', 'POST'), 'create_edit', [PostController::class, 'createOrEdit'])
+        ->name('create_edit');
+    Route::match(array('GET', 'POST'), 'edit/{id}', [PostController::class, 'edit'])
+        ->name('edit');
 });

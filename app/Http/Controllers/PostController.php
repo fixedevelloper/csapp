@@ -14,9 +14,18 @@ class PostController extends Controller
 
     public function index()
     {
-        return view('product.index');
+        return view('post.index');
     }
-
+    public function createOrEdit()
+    {
+        return view('post.create');
+    }
+    public function edit($id)
+    {
+        return view('post.edit',[
+            'id'=>$id
+        ]);
+    }
     public function store(StorePostRequest $request)
     {
         $this->authorize('post-create');

@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\PostResource;
 use App\Models\Category;
 use App\Models\Post;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Support\Facades\Cache;
@@ -82,24 +83,28 @@ class PostController extends Controller
      * GET /posts/{slug}
      * Détail d'un post avec cache
      * @param string $slug
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
     public function getPost(string $slug)
     {
+
         // 🔹 Limite par défaut des articles récents
         $latestLimit = request()->get('limit', 5);
 
         // 🔹 Post principal (cache 1h)
-        $post =  Post::with(['categories', 'tags', 'user', 'media'])
+        $post = Cache::remember("post:{$slug}", 3600, function () use ($slug) {
+            return Post::with(['categories', 'tags', 'user', 'media'])
                 ->where('slug', $slug)
                 ->firstOrFail();
+        });
 
         // 🔹 Derniers articles (cache 30 min)
-        $latestPosts =Post::with(['media', 'categories', 'tags', 'user'])
+        $latestPosts = Cache::remember("latest_posts:{$latestLimit}", 1800, function () use ($latestLimit) {
+            return Post::with(['media', 'categories', 'tags', 'user'])
                 ->latest()
                 ->limit($latestLimit)
                 ->get();
-
+        });
 
         // 🔹 Catégories (cache long)
         $categories = Cache::remember("categories:all", 86400, function () {

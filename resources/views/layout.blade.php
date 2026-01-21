@@ -23,7 +23,7 @@
     @yield('content')
     @include('_partials._footer')
 </div>
-@stack('scripts')
+
 <script src="{{asset('js/vendor.min.js') }}"></script>
 <script src="{{asset('js/databases/jquery.dataTables.min.js') }}"></script>
 <script src="{{asset('js/databases/dataTables.bootstrap5.min.js') }}"></script>
@@ -36,7 +36,7 @@
     }
 </script>
 <script src="{{asset('js/script.js') }}"></script>
-
+@stack('scripts')
 </body>
 
 </html>

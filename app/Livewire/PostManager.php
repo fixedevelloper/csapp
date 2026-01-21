@@ -6,6 +6,7 @@ namespace App\Livewire;
 use App\Models\Category;
 use App\Models\Post;
 use App\Models\Tag;
+use Illuminate\Support\Facades\Cache;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use Livewire\WithPagination;
@@ -21,13 +22,7 @@ class PostManager extends Component
     public $image;
     public $isEditing = false;
 
-    protected $rules = [
-        'title' => 'required|min:3',
-        'content' => 'required|min:10',
-        'categories' => 'array',
-        'tags' => 'array',
-        'image' => 'nullable|image|max:2048'
-    ];
+
 
     public function render()
     {
@@ -38,79 +33,17 @@ class PostManager extends Component
         ]);
     }
 
-    public function resetForm()
-    {
-        $this->reset(['title', 'content', 'categories', 'status', 'tags', 'image']);
-        $this->isEditing = false;
-        $this->postId = null;
-    }
-
     public function create()
     {
-        $this->resetForm();
-        $this->dispatch('openModal');
+        $this->isEditing = false;
+        $this->postId = null;
+       return $this->redirect('create_edit');
     }
 
-    public function store()
-    {
-        $this->validate();
-
-        $post = Post::create([
-            'title' => $this->title,
-            'content' => $this->content,
-            'status' => $this->status,
-        ]);
-
-        $post->tags()->sync($this->tags);
-        $post->categories()->sync($this->categories);
-
-        if ($this->image) {
-            $post->addMedia($this->image->getRealPath())
-                ->usingFileName('post-'.time().'.jpg')
-                ->toMediaCollection('posts');
-        }
-
-        $this->resetForm();
-        $this->dispatch('closeModal');
-        session()->flash('message', 'Post créé avec succès.');
-    }
 
     public function edit($id)
     {
-        $post = Post::with('tags')->findOrFail($id);
-        $this->postId = $post->id;
-        $this->title = $post->title;
-        $this->content = $post->content;
-        $this->categories = $post->categories->pluck('id')->toArray();
-        $this->status = $post->status;
-        $this->tags = $post->tags->pluck('id')->toArray();
-        $this->isEditing = true;
-        $this->dispatch('openModal');
-    }
-
-    public function update()
-    {
-        $this->validate();
-
-        $post = Post::findOrFail($this->postId);
-        $post->update([
-            'title' => $this->title,
-            'content' => $this->content,
-            'status' => $this->status,
-        ]);
-
-        $post->tags()->sync($this->tags);
-        $post->categories()->sync($this->categories);
-        if ($this->image) {
-            $post->clearMediaCollection('posts');
-            $post->addMedia($this->image->getRealPath())
-                ->usingFileName('post-'.time().'.jpg')
-                ->toMediaCollection('posts');
-        }
-
-        $this->resetForm();
-        $this->dispatch('closeModal');
-        session()->flash('message', 'Post mis à jour.');
+        return redirect()->route('post.edit', ['id' => $id]);
     }
 
     public function delete($id)
