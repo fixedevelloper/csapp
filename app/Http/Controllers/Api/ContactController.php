@@ -4,6 +4,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Models\Comment;
 use App\Models\Contact;
 use App\Models\Devis;
 use Illuminate\Http\Request;
@@ -76,6 +77,29 @@ class ContactController extends Controller
             'message' => 'Votre demande de devis a été envoyée avec succès.',
             'devis_id' => $devis->id,
         ]);
+    }
+    public function storeComment(Request $request)
+    {
+        $validated = $request->validate([
+            'post_id' => ['required', 'exists:posts,id'],
+            'name'    => ['required', 'string', 'max:100'],
+            'email'   => ['required', 'email', 'max:150'],
+            'message' => ['required', 'string', 'max:2000'],
+        ]);
+        $message = strip_tags($validated['message']);
+        $comment = Comment::create([
+            'post_id' => $validated['post_id'],
+            'name'    => $validated['name'],
+            'email'   => $validated['email'],
+            'comment' => $message,
+            'approved' => false, // modération
+        ]);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Commentaire envoyé avec succès',
+            'data' => $comment,
+        ], 201);
     }
 }
 

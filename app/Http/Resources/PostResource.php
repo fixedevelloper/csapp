@@ -35,7 +35,7 @@ class PostResource extends JsonResource
                 : '/images/blog/default.webp',
 
             // Relations si nécessaire
-            'categories' => $this->categories()->pluck('name'),
+            'categories' => CategoryResource::collection($this->categories),
             'tags' => TagResource::collection($this->tags),
             'author' => [
                 'id' => $this->user->id ?? null,

@@ -17,7 +17,7 @@
         <div class="mb-3">
             <label>Contenu</label>
 
-         <textarea class="form-control" rows="4" name="content" wire:model="content"></textarea>
+         <textarea class="form-control" rows="4" name="content" wire:model="content" id="editor"></textarea>
             @error('content') <small class="text-danger">{{ $message }}</small> @enderror
         </div>
                 <div class="mb-3">
@@ -75,10 +75,3 @@
 </div>
     </div></div>
 
-@push('scripts')
-    <!-- Include Bubble Theme -->
-    <link href="https://cdn.quilljs.com/1.3.6/quill.bubble.css" rel="stylesheet">
-
-    <!-- Include the Quill library -->
-    <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
-@endpush
