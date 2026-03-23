@@ -4,6 +4,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Mail\DevisSubmitted;
 use App\Models\Comment;
 use App\Models\Contact;
 use App\Models\Devis;
@@ -70,9 +71,7 @@ class ContactController extends Controller
             'user_agent'   => $request->userAgent(),
         ]);
 
-        // Optionnel : Notification admin par email
-        // Mail::to('admin@creativsolutions.cm')->send(new NewDevisNotification($devis));
-
+        Mail::to('rodriguembah13@gmail.com')->send(new DevisSubmitted($devis));
         return response()->json([
             'message' => 'Votre demande de devis a été envoyée avec succès.',
             'devis_id' => $devis->id,
