@@ -24,8 +24,15 @@ class PostResource extends JsonResource
             'excerpt' => $this->excerpt,
             'content' => $this->content,
             'created_at' => $this->created_at->format('Y-m-d H:i:s'),
-            'comments_count' => $this->comments()->count(),
-            'comments' => $this->comments,
+            'comments_count' => $this->comments()->approved()->count(),
+            // Uniquement les commentaires modérés, sans l'email des visiteurs
+            'comments' => $this->comments()->approved()->latest()->get()
+                ->map(fn ($comment) => [
+                    'id' => $comment->id,
+                    'name' => $comment->name,
+                    'comment' => $comment->comment,
+                    'created_at' => $comment->created_at?->format('Y-m-d H:i:s'),
+                ]),
             'thumb_url' => $media && $media->hasGeneratedConversion('thumb')
                 ? $media->getUrl('thumb')
                 : '/images/blog/default-thumb.webp',

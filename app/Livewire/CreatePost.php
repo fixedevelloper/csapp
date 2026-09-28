@@ -66,14 +66,12 @@ class CreatePost extends Component
     {
         $this->validate();
 
-        $slug = Str::slug($this->title);
-
         if ($this->isEditing) {
+            // Le slug n'est pas modifié : changer le titre ne casse pas l'URL déjà publiée
             $post = Post::findOrFail($this->postId);
             $post->update([
                 'user_id'=>auth()->id(),
                 'title' => $this->title,
-                'slug' => $slug,
                 'content' => $this->content,
                 'status' => $this->status,
                 'meta_title' => $this->meta_title ?? $this->title,
@@ -84,7 +82,7 @@ class CreatePost extends Component
             $post = Post::create([
                 'user_id'=>auth()->id(),
                 'title' => $this->title,
-                'slug' => $slug,
+                'slug' => Post::uniqueSlug($this->title),
                 'content' => $this->content,
                 'status' => $this->status,
                 'meta_title' => $this->meta_title ?? $this->title,

@@ -46,9 +46,6 @@ class PostController extends Controller
         }
 
 
-        // Slug automatique
-        $validated['slug'] = Str::slug($validated['title']);
-
         // Mise à jour du post
         $post->update($validated);
 
@@ -85,7 +82,7 @@ class PostController extends Controller
         $orderColumn = in_array($request->order_column, $allowedColumns) ? $request->order_column : 'created_at';
         $orderDirection = in_array($request->order_direction, ['asc', 'desc']) ? $request->order_direction : 'desc';
 
-        $limit = (int) $request->get('limit', 10);
+        $limit = min(max((int) $request->get('limit', 10), 1), 100);
 
         $postsQuery = Post::with(['media', 'categories', 'tags', 'user'])
             ->when($request->search_category, function ($query) use ($request) {
@@ -155,7 +152,7 @@ class PostController extends Controller
     {
 
         // 🔹 Limite par défaut des articles récents
-        $latestLimit = request()->get('limit', 5);
+        $latestLimit = min(max((int) request()->get('limit', 5), 1), 20);
 
         // 🔹 Post principal (cache 1h)
         $post =
@@ -210,7 +207,7 @@ class PostController extends Controller
      */
     public function latest(Request $request)
     {
-        $limit = $request->get('limit', 3);
+        $limit = min(max((int) $request->get('limit', 3), 1), 20);
         $posts = Post::with(['media', 'categories', 'tags', 'user'])
             ->latest()
             ->take($limit)

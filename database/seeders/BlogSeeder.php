@@ -8,6 +8,7 @@ use App\Models\Post;
 use App\Models\Category;
 use App\Models\Tag;
 use App\Models\Comment;
+use Illuminate\Support\Str;
 
 class BlogSeeder extends Seeder
 {
@@ -16,7 +17,7 @@ class BlogSeeder extends Seeder
         // Création d'un user admin
         $user = User::firstOrCreate(
             ['email' => 'admin@creativsolutions.cm'],
-            ['name' => 'Admin', 'password' => bcrypt('password')]
+            ['name' => 'Admin', 'password' => bcrypt(env('ADMIN_PASSWORD') ?: Str::password(20))]
         );
 
         // 1️⃣ Categories

@@ -115,4 +115,15 @@ return [
         'name' => env('MAIL_FROM_NAME', 'Example'),
     ],
 
+    /*
+    |--------------------------------------------------------------------------
+    | Destinataires des formulaires du site
+    |--------------------------------------------------------------------------
+    */
+
+    'recipients' => [
+        'contact' => env('MAIL_CONTACT_TO', 'info@cscreativ.com'),
+        'devis' => env('MAIL_DEVIS_TO', 'rodriguembah13@gmail.com'),
+    ],
+
 ];

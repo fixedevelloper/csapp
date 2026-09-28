@@ -4,6 +4,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Mail\ContactSubmitted;
 use App\Mail\DevisSubmitted;
 use App\Models\Comment;
 use App\Models\Contact;
@@ -22,7 +23,7 @@ class ContactController extends Controller
             'subject' => 'required|string|max:255',
             'message' => 'required|string',
         ]);
-        Contact::create([
+        $contact = Contact::create([
             'name'       => $validated['name'],
             'email'      => $validated['email'],
             'phone'      => $validated['phone'],
@@ -32,12 +33,7 @@ class ContactController extends Controller
             'user_agent' => $request->userAgent(),
         ]);
 
-        // Exemple : envoi email
-        Mail::raw($validated['message'], function ($mail) use ($validated) {
-            $mail->to('info@cscreativ.com')
-                ->subject($validated['subject'])
-                ->replyTo($validated['email'], $validated['name']);
-        });
+        Mail::to(config('mail.recipients.contact'))->send(new ContactSubmitted($contact));
 
         return response()->json([
             'success' => true,
@@ -71,7 +67,7 @@ class ContactController extends Controller
             'user_agent'   => $request->userAgent(),
         ]);
 
-        Mail::to('rodriguembah13@gmail.com')->send(new DevisSubmitted($devis));
+        Mail::to(config('mail.recipients.devis'))->send(new DevisSubmitted($devis));
         return response()->json([
             'message' => 'Votre demande de devis a été envoyée avec succès.',
             'devis_id' => $devis->id,

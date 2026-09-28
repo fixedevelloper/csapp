@@ -103,10 +103,7 @@ class AuthController extends Controller
     public function changepassword(Request $request)
     {
         $user = \auth()->user();
-        logger("######################");
         if ($request->method() == "POST") {
-            logger($user);
-            logger("######################");
             $user_=User::query()->find(auth()->id());
             $status= $user->update([
                  'password' => bcrypt($request->get('password')),

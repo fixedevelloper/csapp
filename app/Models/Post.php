@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Str;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
@@ -22,6 +23,23 @@ class Post extends Model implements HasMedia
         'meta_description',
         'meta_keywords',
     ];
+
+    /**
+     * Slug unique à partir du titre : "mon-titre", puis "mon-titre-2", "mon-titre-3"...
+     */
+    public static function uniqueSlug(string $title): string
+    {
+        $base = Str::slug($title) ?: 'article';
+        $slug = $base;
+        $i = 2;
+
+        while (static::where('slug', $slug)->exists()) {
+            $slug = "{$base}-{$i}";
+            $i++;
+        }
+
+        return $slug;
+    }
 
     // -------------------
     // Relations

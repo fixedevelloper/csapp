@@ -18,7 +18,7 @@ class DatabaseSeeder extends Seeder
             ['email' => 'admin@creativsolutions.com'],
             [
                 'name' => 'Admin',
-                'password' => bcrypt('password123'),
+                'password' => bcrypt(env('ADMIN_PASSWORD') ?: Str::password(20)),
             ]
         );
 
