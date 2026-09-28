@@ -33,21 +33,27 @@
                             <h4 class="text-uppercase mt-0">Connexion</h4>
                         </div>
 
+                        @if ($errors->any())
+                            <div class="alert alert-danger" role="alert">
+                                {{ $errors->first() }}
+                            </div>
+                        @endif
+
                         <form method="POST" action="{{ route('loginstore') }}" >
                             {{csrf_field()}}
                             <div class="mb-3">
                                 <label for="emailaddress" class="form-label">Adresse mail</label>
-                                <input class="form-control" name="email" type="email" id="emailaddress" required="" placeholder="Votre email">
+                                <input class="form-control" name="email" type="email" id="emailaddress" required="" placeholder="Votre email" value="{{ old('email') }}" autocomplete="username">
                             </div>
 
                             <div class="mb-3">
                                 <label for="password" class="form-label">Mot de passe</label>
-                                <input class="form-control" name="password" type="password" required="" id="password" placeholder="Votre mot de passe">
+                                <input class="form-control" name="password" type="password" required="" id="password" placeholder="Votre mot de passe" autocomplete="current-password">
                             </div>
 
                             <div class="mb-3">
                                 <div class="form-check">
-                                    <input type="checkbox" class="form-check-input" id="checkbox-signin" checked>
+                                    <input type="checkbox" class="form-check-input" id="checkbox-signin" name="remember" value="1">
                                     <label class="form-check-label" for="checkbox-signin">Se souvenir de moi</label>
                                 </div>
                             </div>
