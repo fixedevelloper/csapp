@@ -15,10 +15,21 @@ class BlogSeeder extends Seeder
     public function run(): void
     {
         // Création d'un user admin
-        $user = User::firstOrCreate(
-            ['email' => 'admin@creativsolutions.cm'],
-            ['name' => 'Admin', 'password' => bcrypt(env('ADMIN_PASSWORD') ?: Str::password(20))]
-        );
+        $user = User::where('email', 'admin@creativsolutions.cm')->first();
+        if (! $user) {
+            // ADMIN_PASSWORD du .env, sinon mot de passe aléatoire AFFICHÉ une seule fois dans la console
+            $password = env('ADMIN_PASSWORD') ?: Str::password(20, symbols: false);
+            $user = User::create([
+                'name' => 'Admin',
+                'email' => 'admin@creativsolutions.cm',
+                'user_type' => 'admin',
+                'password' => $password,
+            ]);
+            if (! env('ADMIN_PASSWORD')) {
+                $this->command?->warn("Compte admin admin@creativsolutions.cm créé avec le mot de passe : {$password}");
+                $this->command?->warn('Notez-le, ou changez-le avec : php artisan admin:password admin@creativsolutions.cm');
+            }
+        }
 
         // 1️⃣ Categories
         $categories = ['Web Development', 'Graphic Design', 'Digital Marketing', 'UI/UX Design', 'Application Mobile'];

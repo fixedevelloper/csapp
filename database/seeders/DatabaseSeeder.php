@@ -14,13 +14,21 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         // Création d'un user admin si inexistant
-        $user = User::firstOrCreate(
-            ['email' => 'admin@creativsolutions.com'],
-            [
+        $user = User::where('email', 'admin@creativsolutions.com')->first();
+        if (! $user) {
+            // ADMIN_PASSWORD du .env, sinon mot de passe aléatoire AFFICHÉ une seule fois dans la console
+            $password = env('ADMIN_PASSWORD') ?: Str::password(20, symbols: false);
+            $user = User::create([
                 'name' => 'Admin',
-                'password' => bcrypt(env('ADMIN_PASSWORD') ?: Str::password(20)),
-            ]
-        );
+                'email' => 'admin@creativsolutions.com',
+                'user_type' => 'admin',
+                'password' => $password,
+            ]);
+            if (! env('ADMIN_PASSWORD')) {
+                $this->command?->warn("Compte admin admin@creativsolutions.com créé avec le mot de passe : {$password}");
+                $this->command?->warn('Notez-le, ou changez-le avec : php artisan admin:password admin@creativsolutions.com');
+            }
+        }
 
         // Création des catégories
         $categories = collect([
