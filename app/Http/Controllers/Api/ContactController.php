@@ -21,7 +21,8 @@ class ContactController extends Controller
             'email'   => 'required|email',
             'phone'   => 'required|string|max:20',
             'subject' => 'required|string|max:255',
-            'message' => 'required|string',
+            'message' => 'required|string|max:5000',
+            'website' => 'nullable|size:0', // honeypot
         ]);
         $contact = Contact::create([
             'name'       => $validated['name'],
@@ -50,7 +51,7 @@ class ContactController extends Controller
             'company'      => 'nullable|string|max:255',
             'project_type' => 'required|string|max:255',
             'budget'       => 'nullable|string|max:100',
-            'description'  => 'required|string',
+            'description'  => 'required|string|max:5000',
             'website'      => 'nullable|size:0', // honeypot
         ]);
 

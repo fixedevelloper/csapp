@@ -50,10 +50,14 @@
                     <div class="dropdown-divider"></div>
 
                     <!-- item-->
-                    <a href="{{route('destroy')}}" class="dropdown-item notify-item">
-                        <i class="fe-log-out"></i>
-                        <span>Logout</span>
-                    </a>
+                    {{-- POST + CSRF : un simple lien GET permettait à n'importe quel site de déconnecter l'admin --}}
+                    <form method="POST" action="{{route('destroy')}}">
+                        @csrf
+                        <button type="submit" class="dropdown-item notify-item">
+                            <i class="fe-log-out"></i>
+                            <span>Déconnexion</span>
+                        </button>
+                    </form>
 
                 </div>
             </li>
@@ -73,7 +77,7 @@
                     <img src="{{ asset('images/logo.png') }}" alt="" height="22">
                 </span>
                 <span class="logo-lg text-white">
-                    <img src="{{ asset('images/logo.png') }}" alt="" height="98">
+                    <img src="{{ asset('images/logo.png') }}" alt="Creativ Solutions" height="44">
                 </span>
             </a>
             <a href="/" class="logo logo-dark text-center">
@@ -81,7 +85,7 @@
                     <img src="{{ asset('images/logo.png') }}" alt="" height="22">
                 </span>
                 <span class="logo-lg">
-                    <img src="{{ asset('images/logo.png') }}" alt="" height="56">
+                    <img src="{{ asset('images/logo.png') }}" alt="Creativ Solutions" height="44">
                 </span>
             </a>
         </div>

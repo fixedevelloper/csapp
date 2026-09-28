@@ -14,7 +14,7 @@
     <link rel="stylesheet" href="{{asset('css/icons.min.css')}}">
     <link rel="stylesheet" href="{{asset('css/style.css')}}">
 </head>
-<body class="loading" data-layout='{"mode": "dark", "width": "fluid", "menuPosition": "fixed",
+<body class="loading" data-layout='{"mode": "light", "width": "fluid", "menuPosition": "fixed",
 "sidebar": { "color": "dark", "size": "default", "showuser": true}, "topbar": {"color": "dark"},
  "showRightSidebarOnPageLoad": true}'>
 <!-- Begin page -->

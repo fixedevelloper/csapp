@@ -21,9 +21,12 @@
                 </li>
 
                 <li class="list-inline-item">
-                    <a href="{{route('destroy')}}">
-                        <i class="mdi mdi-power"></i>
-                    </a>
+                    <form method="POST" action="{{route('destroy')}}" class="d-inline">
+                        @csrf
+                        <button type="submit" class="btn btn-link p-0 text-reset" title="Déconnexion">
+                            <i class="mdi mdi-power"></i>
+                        </button>
+                    </form>
                 </li>
             </ul>
         </div>
@@ -58,6 +61,16 @@
                         <a href="{{route('post.index')}}">
                             <i class="mdi mdi-post"></i>
                             <span> Posts </span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{route('comment.index')}}">
+                            <i class="mdi mdi-comment-text-multiple"></i>
+                            <span> Commentaires </span>
+                            @php($pendingComments = \App\Models\Comment::where('approved', false)->count())
+                            @if($pendingComments)
+                                <span class="badge bg-danger rounded-pill float-end">{{ $pendingComments }}</span>
+                            @endif
                         </a>
                     </li>
                     <li>

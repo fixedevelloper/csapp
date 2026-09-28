@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\CommentController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\NewsletterController;
 use App\Http\Controllers\PostController;
@@ -17,7 +18,7 @@ Route::middleware('guest')->group(function () {
 Route::middleware('auth')->group(function () {
     Route::match(array('GET', 'POST'), '/profil', [AuthController::class, 'profil'])
         ->name('profil');
-    Route::get('/destroy', [AuthController::class, 'destroy'])
+    Route::post('/destroy', [AuthController::class, 'destroy'])
         ->name('destroy');
     Route::match(array('GET', 'POST'), '/changeimage', [AuthController::class, 'changeimage'])
         ->name('changeimage');
@@ -39,6 +40,8 @@ Route::middleware('auth')->group(function () {
         Route::match(array('GET', 'POST'), 'edit/{id}', [PostController::class, 'edit'])
             ->name('edit');
     });
+    Route::get('comments/index', [CommentController::class, 'index'])
+        ->name('comment.index');
     Route::group(['prefix' => 'newsletter', 'as' => 'newsletter.'],function () {
         Route::get('index', [NewsletterController::class, 'index'])
             ->name('index');

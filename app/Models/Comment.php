@@ -11,6 +11,13 @@ class Comment extends Model
 
     protected $fillable = ['name', 'email', 'comment', 'post_id', 'approved'];
 
+    protected function casts(): array
+    {
+        return [
+            'approved' => 'boolean',
+        ];
+    }
+
     public function post()
     {
         return $this->belongsTo(Post::class);
