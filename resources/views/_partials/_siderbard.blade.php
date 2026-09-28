@@ -5,7 +5,7 @@
 
         <!-- User box -->
         <div class="user-box text-center">
-            <img src="{{asset('storage/uploads/'.auth()->user()->photo)}}" alt="user-img" title="{{auth()->user()->name}}" class="rounded-circle img-thumbnail avatar-md">
+            <img src="{{ auth()->user()->avatar_url }}" alt="user-img" title="{{auth()->user()->name}}" class="rounded-circle img-thumbnail avatar-md">
             <div class="dropdown">
                 <a href="#" class="user-name dropdown-toggle h5 mt-2 mb-1 d-block"
                    aria-expanded="false">{{ auth()->user()->name }}</a>
@@ -58,6 +58,12 @@
                         <a href="{{route('post.index')}}">
                             <i class="mdi mdi-post"></i>
                             <span> Posts </span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{route('newsletter.index')}}">
+                            <i class="mdi mdi-email-newsletter"></i>
+                            <span> Newsletter </span>
                         </a>
                     </li>
                 @endif

@@ -23,7 +23,6 @@
                     <th>Titre</th>
                     <th>Catégories</th>
                     <th>Tags</th>
-                    <th>Status</th>
                     <th width="150">Actions</th>
                 </tr>
                 </thead>
@@ -54,12 +53,6 @@
                             @foreach ($post->tags as $tag)
                                 <span class="badge bg-secondary">{{ $tag->name }}</span>
                             @endforeach
-                        </td>
-
-                        <td>
-                            <span class="badge bg-{{ $post->status === 'published' ? 'success' : 'warning' }}">
-                                {{ ucfirst($post->status) }}
-                            </span>
                         </td>
 
                         <td>

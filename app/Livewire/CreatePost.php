@@ -14,7 +14,7 @@ class CreatePost extends Component
     use WithFileUploads;
 
     public $postId;
-    public $title, $content, $status = 'draft';
+    public $title, $content;
     public $categories = [];
     public $tags = [];
     public $image;
@@ -52,7 +52,6 @@ class CreatePost extends Component
         $this->postId = $post->id;
         $this->title = $post->title;
         $this->content = $post->content;
-        $this->status = $post->status;
         $this->categories = $post->categories->pluck('id')->toArray();
         $this->tags = $post->tags->pluck('id')->toArray();
         $this->meta_title = $post->meta_title;
@@ -70,10 +69,8 @@ class CreatePost extends Component
             // Le slug n'est pas modifié : changer le titre ne casse pas l'URL déjà publiée
             $post = Post::findOrFail($this->postId);
             $post->update([
-                'user_id'=>auth()->id(),
                 'title' => $this->title,
                 'content' => $this->content,
-                'status' => $this->status,
                 'meta_title' => $this->meta_title ?? $this->title,
                 'meta_keywords' => $this->meta_keywords ?? '',
                 'meta_description' => $this->meta_description ?? Str::limit(strip_tags($this->content), 160),
@@ -84,7 +81,6 @@ class CreatePost extends Component
                 'title' => $this->title,
                 'slug' => Post::uniqueSlug($this->title),
                 'content' => $this->content,
-                'status' => $this->status,
                 'meta_title' => $this->meta_title ?? $this->title,
                 'meta_keywords' => $this->meta_keywords ?? '',
                 'meta_description' => $this->meta_description ?? Str::limit(strip_tags($this->content), 160),

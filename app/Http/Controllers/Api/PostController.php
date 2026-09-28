@@ -104,15 +104,8 @@ class PostController extends Controller
 
         $posts = $postsQuery->paginate($limit);
 
-        return PostResource::collection($posts)
-            ->additional([
-                'meta' => [
-                    'current_page' => $posts->currentPage(),
-                    'last_page' => $posts->lastPage(),
-                    'per_page' => $posts->perPage(),
-                    'total' => $posts->total(),
-                ],
-            ]);
+        // La pagination ajoute déjà meta.current_page, last_page, per_page et total
+        return PostResource::collection($posts);
     }
 
 

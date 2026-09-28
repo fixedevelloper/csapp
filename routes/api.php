@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\ContactController;
 use App\Http\Controllers\Api\HookController;
+use App\Http\Controllers\Api\NewsletterController;
 use App\Http\Controllers\Api\PostController;
 
 use Illuminate\Support\Facades\Route;
@@ -24,3 +25,5 @@ Route::post('/contact', [ContactController::class, 'store'])
 Route::post('/devis', [ContactController::class, 'storeDevis'])
     ->middleware('throttle:contact-form');
 Route::post('/comments', [ContactController::class, 'storeComment'])->middleware('throttle:contact-form');
+Route::post('/newsletter', [NewsletterController::class, 'subscribe'])
+    ->middleware('throttle:contact-form');

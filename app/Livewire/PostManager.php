@@ -16,7 +16,7 @@ class PostManager extends Component
     use WithPagination, WithFileUploads;
 
     public $postId;
-    public $title, $content, $category_id, $status = 'draft';
+    public $title, $content, $category_id;
     public $tags = [];
     public $categories = [];
     public $image;
@@ -48,9 +48,8 @@ class PostManager extends Component
 
     public function delete($id)
     {
-        $post = Post::findOrFail($id);
-        $post->clearMediaCollection('image');
-        $post->delete();
+        // InteractsWithMedia supprime aussi les images de l'article (couverture et contenu)
+        Post::findOrFail($id)->delete();
 
         session()->flash('message', 'Post supprimé.');
     }

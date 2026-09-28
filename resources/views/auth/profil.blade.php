@@ -1,4 +1,4 @@
-@extends('back.base')
+@extends('layout')
 
 @section('content')
     <div class="content-page">
@@ -26,7 +26,7 @@
                             <div class="card-body">
                                 <div class="bg-picture">
                                     <div class="d-flex align-items-top">
-                                        <img src="{{asset('storage/uploads/'.$user->photo)}}"
+                                        <img src="{{ $user->avatar_url }}"
                                              class="flex-shrink-0 rounded-circle avatar-xl img-thumbnail float-start me-3"
                                              alt="profile-image">
                                     </div>
@@ -63,63 +63,27 @@
                                 </ul>
                                 <div class="tab-content">
                                     <div class="tab-pane show active" id="profile1">
-                                        <form method="POST">
+                                        <form method="POST" action="{{route('profil')}}">
                                             {{csrf_field()}}
                                             <div class="row">
                                                 <div class="col-md-6 mb-3">
                                                     <label for="name" class="form-label">Nom</label>
-                                                    <input value="{{$user->name}}" class="form-control" name="firstname"
-                                                           type="text" id="name" required=""
-                                                           placeholder="Enter your name">
+                                                    <input value="{{ old('name', $user->name) }}" class="form-control" name="name"
+                                                           type="text" id="name" required>
                                                 </div>
-
                                                 <div class="col-md-6 mb-3">
-                                                    <label for="lastname" class="form-label">Prenom</label>
-                                                    <input value="{{$user->lastname}}" class="form-control"
-                                                           name="lastname" type="text" required="" id="lastname"
-                                                           placeholder="Enter your lastName">
-                                                </div>
-                                            </div>
-                                            <div class="row justify-content-center">
-                                                <div class="col-md-8 mb-3">
-                                                    <label for="emailaddress" class="form-label">Email address</label>
-                                                    <input value="{{$user->email}}" class="form-control" name="email"
-                                                           type="email" id="emailaddress" required=""
-                                                           placeholder="Enter your email">
+                                                    <label for="phone" class="form-label">Téléphone</label>
+                                                    <input value="{{ old('phone', $user->phone) }}" class="form-control" name="phone"
+                                                           type="tel" id="phone">
                                                 </div>
                                             </div>
                                             <div class="row">
-                                                <div class="col-md-6 mb-3">
-                                                    <label for="phone" class="form-label">Telephone</label>
-                                                    <input value="{{$user->phone}}" class="form-control" name="phone"
-                                                           type="text" id="name" required=""
-                                                           placeholder="Enter your Telephone">
-                                                </div>
-
-                                                <div class="col-md-6 mb-3">
-                                                    <label for="adressepostale" class="form-label">Adresse
-                                                        postal</label>
-                                                    <input value="{{$user->adressepostal}}" class="form-control"
-                                                           name="adressepostal" type="text" required=""
-                                                           id="adressepostale" placeholder="Enter your adressepostale">
+                                                <div class="col-md-12 mb-3">
+                                                    <label for="emailaddress" class="form-label">Adresse email</label>
+                                                    <input value="{{ old('email', $user->email) }}" class="form-control" name="email"
+                                                           type="email" id="emailaddress" required>
                                                 </div>
                                             </div>
-                                            <div class="row">
-                                                <div class="col-md-6 mb-3">
-                                                    <label for="phone" class="form-label">Adresse</label>
-                                                    <input value="{{$user->adresse}}" class="form-control"
-                                                           name="adresse" type="text" id="name" required=""
-                                                           placeholder="Enter your Adresse">
-                                                </div>
-
-                                                <div class="col-md-6 mb-3">
-                                                    <label for="commune" class="form-label">Commune</label>
-                                                    <input value="{{$user->commune}}" class="form-control"
-                                                           name="commune" type="text" required="" id="commune"
-                                                           placeholder="Enter your commune">
-                                                </div>
-                                            </div>
-
                                             <div class="mb-3 d-grid text-center">
                                                 <button class="btn btn-success" type="submit"> Modifier</button>
                                             </div>
@@ -140,7 +104,15 @@
                                                     <label for="password" class="form-label">Nouveau mot de
                                                         passe</label>
                                                     <input class="form-control" name="password" type="password"
-                                                           required="" id="password" placeholder="">
+                                                           required minlength="8" id="password" autocomplete="new-password">
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-md-6 mb-3 offset-md-6">
+                                                    <label for="password_confirmation" class="form-label">Confirmer le
+                                                        nouveau mot de passe</label>
+                                                    <input class="form-control" name="password_confirmation" type="password"
+                                                           required minlength="8" id="password_confirmation" autocomplete="new-password">
                                                 </div>
                                             </div>
                                             <div class="mb-3 d-grid text-center">

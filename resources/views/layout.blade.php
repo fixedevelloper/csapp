@@ -6,8 +6,11 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <title>{{env('APP_NAME')}} | Gestion de salon</title>
-    <link rel="stylesheet" href="{{asset('css/bootstrap.min.css')}}">
-    <link rel="stylesheet" href="{{asset('css/app.min.css')}}">
+    <link rel="stylesheet" href="{{asset('css/bootstrap.min.css')}}" id="bs-default-stylesheet">
+    <link rel="stylesheet" href="{{asset('css/app.min.css')}}" id="app-default-stylesheet">
+    {{-- app.min.js lit les href de ces deux balises au chargement : sans elles, il plante sur chaque page.
+         Pas de thème sombre dans ce projet, d'où la balise désactivée. --}}
+    <link rel="stylesheet" href="{{asset('css/app.min.css')}}" id="app-dark-stylesheet" disabled>
     <link rel="stylesheet" href="{{asset('css/icons.min.css')}}">
     <link rel="stylesheet" href="{{asset('css/style.css')}}">
 </head>

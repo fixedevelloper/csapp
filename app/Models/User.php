@@ -35,6 +35,20 @@ class User extends Authenticatable implements HasMedia
             'password' => 'hashed',
         ];
     }
+    public function registerMediaCollections(): void
+    {
+        // Une seule photo de profil : la nouvelle remplace l'ancienne
+        $this->addMediaCollection('avatars')->singleFile();
+    }
+
+    /**
+     * URL de la photo de profil, ou l'avatar par défaut.
+     */
+    public function getAvatarUrlAttribute(): string
+    {
+        return $this->getFirstMediaUrl('avatars', 'thumb') ?: asset('images/blog/comment-avatar.png');
+    }
+
     public function registerMediaConversions(\Spatie\MediaLibrary\MediaCollections\Models\Media $media = null): void
     {
         $this->addMediaConversion('thumb')

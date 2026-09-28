@@ -3,6 +3,7 @@
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\NewsletterController;
 use App\Http\Controllers\PostController;
 use Illuminate\Support\Facades\Route;
 
@@ -20,6 +21,8 @@ Route::middleware('auth')->group(function () {
         ->name('destroy');
     Route::match(array('GET', 'POST'), '/changeimage', [AuthController::class, 'changeimage'])
         ->name('changeimage');
+    Route::post('/changepassword', [AuthController::class, 'changepassword'])
+        ->name('changepassword');
     Route::match(array('GET', 'POST'), '/dashboard', [DashboardController::class, 'dashboard'])
         ->name('dashboard');
     Route::group(['prefix' => 'categories', 'as' => 'category.'],function () {
@@ -35,5 +38,11 @@ Route::middleware('auth')->group(function () {
             ->name('create_edit');
         Route::match(array('GET', 'POST'), 'edit/{id}', [PostController::class, 'edit'])
             ->name('edit');
+    });
+    Route::group(['prefix' => 'newsletter', 'as' => 'newsletter.'],function () {
+        Route::get('index', [NewsletterController::class, 'index'])
+            ->name('index');
+        Route::get('export', [NewsletterController::class, 'export'])
+            ->name('export');
     });
 });

@@ -30,7 +30,7 @@
 
             <li class="dropdown notification-list topbar-dropdown">
                 <a class="nav-link dropdown-toggle nav-user me-0 waves-effect waves-light" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="false" aria-expanded="false">
-                    <img src="{{asset('storage/uploads/'.auth()->user()->photo)}}" alt="user-image" class="rounded-circle">
+                    <img src="{{ auth()->user()->avatar_url }}" alt="user-image" class="rounded-circle">
                     <span class="pro-user-name ms-1">{{ auth()->user()->email }}
                         <i class="mdi mdi-chevron-down"></i>
                     </span>
@@ -70,18 +70,18 @@
         <div class="logo-box">
             <a href="{{route('dashboard')}}" class="logo logo-light text-center">
                 <span class="logo-sm">
-                    <img src="{{asset('logo.jpeg')}}" alt="" height="22">
+                    <img src="{{ asset('images/logo.png') }}" alt="" height="22">
                 </span>
                 <span class="logo-lg text-white">
-                    <img src="{{asset('logo.jpeg')}}" alt="" height="98">
+                    <img src="{{ asset('images/logo.png') }}" alt="" height="98">
                 </span>
             </a>
             <a href="/" class="logo logo-dark text-center">
                 <span class="logo-sm">
-                    <img src="{{asset('storage/images/logo.png')}}" alt="" height="22">
+                    <img src="{{ asset('images/logo.png') }}" alt="" height="22">
                 </span>
                 <span class="logo-lg">
-                    <img src="{{asset('storage/images/logo.png')}}" alt="" height="56">
+                    <img src="{{ asset('images/logo.png') }}" alt="" height="56">
                 </span>
             </a>
         </div>

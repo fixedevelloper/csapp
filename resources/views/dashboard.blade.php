@@ -6,7 +6,7 @@
         <!-- Start Content-->
             <div class="container-fluid">
                 <div class="text-center mt-3">
-                    <img src="{{ asset('logo.jpeg') }}">
+                    <img src="{{ asset('images/logo.png') }}">
                 </div>
 
             </div>
