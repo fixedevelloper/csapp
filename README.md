@@ -59,3 +59,13 @@ If you discover a security vulnerability within Laravel, please send an e-mail t
 ## License
 
 The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+
+## Back-office
+
+Le back-office n'est plus géré par Laravel (Blade / Livewire) : il vit dans l'application Next.js du site, sous `/admin`
+(`cswebsite/app/admin`). Laravel n'expose que l'API d'administration, sous `/api/admin/*` (jeton Sanctum, compte
+`user_type = admin`).
+
+- Les anciennes adresses du back-office (`/dashboard`, `/posts/index`, …) redirigent vers `ADMIN_URL` (voir `.env.example`).
+- Mot de passe admin perdu : `php artisan admin:password admin@exemple.com`.
+- Les e-mails de devis et de contact sont envoyés par la file d'attente : gardez `php artisan queue:work` actif en production.

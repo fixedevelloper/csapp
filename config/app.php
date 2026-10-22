@@ -16,6 +16,11 @@ return [
     'name' => env('APP_NAME', 'Laravel'),
 
     /*
+    | URL du back-office Next.js : les anciennes adresses du back-office Blade y redirigent.
+    */
+    'admin_url' => env('ADMIN_URL', 'http://localhost:3000/admin'),
+
+    /*
     |--------------------------------------------------------------------------
     | Application Environment
     |--------------------------------------------------------------------------

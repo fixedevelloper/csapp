@@ -9,7 +9,9 @@ use App\Mail\DevisSubmitted;
 use App\Models\Comment;
 use App\Models\Contact;
 use App\Models\Devis;
+use App\Support\DevisSchema;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Mail;
 
 class ContactController extends Controller
@@ -43,7 +45,7 @@ class ContactController extends Controller
     }
     public function storeDevis(Request $request)
     {
-        // Validation des champs + honeypot anti-bot
+        // Validation des champs + honeypot anti-bot ; les questions propres au service sont validées selon project_type
         $validated = $request->validate([
             'name'         => 'required|string|max:255',
             'email'        => 'required|email|max:255',
@@ -51,9 +53,12 @@ class ContactController extends Controller
             'company'      => 'nullable|string|max:255',
             'project_type' => 'required|string|max:255',
             'budget'       => 'nullable|string|max:100',
-            'description'  => 'required|string|max:5000',
+            'deadline'     => ['nullable', 'string', Rule::in(DevisSchema::DEADLINES)],
+            'source'       => ['nullable', 'string', 'max:150', 'regex:/^\/[\w\-\/]*$/'],
+            // Les services guidés (questions fermées) n'exigent pas de description libre
+            'description'  => [Rule::requiredIf(!in_array($request->input('project_type'), DevisSchema::guidedTypes(), true)), 'nullable', 'string', 'max:5000'],
             'website'      => 'nullable|size:0', // honeypot
-        ]);
+        ] + DevisSchema::rules($request->input('project_type')));
 
         // Création du devis
         $devis = Devis::create([
@@ -63,7 +68,10 @@ class ContactController extends Controller
             'company'      => $validated['company'] ?? null,
             'project_type' => $validated['project_type'],
             'budget'       => $validated['budget'] ?? null,
-            'description'  => $validated['description'],
+            'deadline'     => $validated['deadline'] ?? null,
+            'source'       => $validated['source'] ?? null,
+            'details'      => $validated['details'] ?? null,
+            'description'  => $validated['description'] ?? null,
             'ip_address'   => $request->ip(),
             'user_agent'   => $request->userAgent(),
         ]);

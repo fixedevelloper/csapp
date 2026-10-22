@@ -10,72 +10,9 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Str;
 
 class PostController extends Controller
 {
-    public function update(Request $request, Post $post)
-    {
-        // Validation
-        $validated = $request->validate([
-            'title' => 'required|string|max:255',
-            'excerpt' => 'nullable|string',
-            'content' => 'required|string',
-            'meta_title' => 'nullable|string|max:255',
-            'meta_description' => 'nullable|string|max:255',
-            'meta_keywords' => 'nullable|string|max:255',
-            'categories' => 'nullable|array',
-            'categories.*' => 'exists:categories,id',
-            'tags' => 'nullable|array',
-            'tags.*' => 'exists:tags,id',
-            'image' => 'nullable|image|max:2048', // max 2MB
-        ]);
-
-        // Upload image si présente
-        if ($request->hasFile('image')) {
-
-            // Supprimer l'ancienne image
-            $post->clearMediaCollection('posts');
-
-            $filename = 'post-' . time() . '.' . $request->file('image')->getClientOriginalExtension();
-
-            $post
-                ->addMediaFromRequest('image')
-                ->usingFileName($filename)
-                ->toMediaCollection('posts');
-        }
-
-
-        // Mise à jour du post
-        $post->update($validated);
-
-        // Sync categories & tags (pivot)
-        if (isset($validated['categories'])) {
-            $post->categories()->sync($validated['categories']);
-        }
-        if (isset($validated['tags'])) {
-            $post->tags()->sync($validated['tags']);
-        }
-        // Rafraîchir cache
-        Cache::forget("post:{$post->slug}");
-        Cache::forget('posts:latest');
-        return new PostResource($post->load('categories', 'tags'));
-    }
-    public function uploadEditorImage(Request $request, Post $post)
-    {
-        $request->validate([
-            'image' => 'required|image|max:5120',
-        ]);
-
-        $media = $post
-            ->addMediaFromRequest('image')
-            ->toMediaCollection('post-content');
-
-        return response()->json([
-            'url' => $media->getUrl()
-        ]);
-    }
-
     public function index(Request $request)
     {
         $allowedColumns = ['id', 'title', 'created_at'];

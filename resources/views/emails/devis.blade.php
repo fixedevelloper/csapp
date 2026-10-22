@@ -50,15 +50,42 @@
                                 <td><strong>💰 Budget :</strong></td>
                                 <td>{{ $devis->budget ?? 'Non précisé' }}</td>
                             </tr>
+                            <tr>
+                                <td><strong>⏱️ Délai :</strong></td>
+                                <td>{{ $devis->deadline ?? 'Non précisé' }}</td>
+                            </tr>
+                            @if($devis->source)
+                            <tr>
+                                <td><strong>🔗 Page d'origine :</strong></td>
+                                <td>{{ $devis->source }}</td>
+                            </tr>
+                            @endif
                         </table>
 
+                        <!-- DÉTAILS DU SERVICE -->
+                        @if(count($devis->detailsList()))
+                        <div style="margin-top:20px; padding:15px; background:#f9fafb; border-radius:8px;">
+                            <strong>📋 Détails du projet :</strong>
+                            <table width="100%" cellpadding="6" cellspacing="0" style="font-size:14px; color:#333; margin-top:8px;">
+                                @foreach($devis->detailsList() as $d)
+                                <tr>
+                                    <td style="width:45%; vertical-align:top;"><strong>{{ $d['label'] }}</strong></td>
+                                    <td>{{ $d['value'] }}</td>
+                                </tr>
+                                @endforeach
+                            </table>
+                        </div>
+                        @endif
+
                         <!-- DESCRIPTION -->
+                        @if($devis->description)
                         <div style="margin-top:20px; padding:15px; background:#f9fafb; border-radius:8px;">
                             <strong>📝 Description :</strong>
                             <p style="margin-top:10px; line-height:1.6;">
                                 {{ $devis->description }}
                             </p>
                         </div>
+                        @endif
 
                         <!-- BUTTON -->
                         <div style="text-align:center; margin-top:30px;">

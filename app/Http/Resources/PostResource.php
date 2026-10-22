@@ -24,6 +24,11 @@ class PostResource extends JsonResource
             'excerpt' => $this->excerpt,
             'content' => $this->content,
             'created_at' => $this->created_at->format('Y-m-d H:i:s'),
+            'updated_at' => $this->updated_at?->format('Y-m-d H:i:s'),
+            // Champs SEO saisis dans l'admin (titre et description de la page, mots-clés)
+            'meta_title' => $this->meta_title,
+            'meta_description' => $this->meta_description,
+            'meta_keywords' => $this->meta_keywords,
             'comments_count' => $this->comments()->approved()->count(),
             // Uniquement les commentaires modérés, sans l'email des visiteurs
             'comments' => $this->comments()->approved()->latest()->get()

@@ -27,38 +27,14 @@ class ApiSecurityTest extends TestCase
         ], $attributes));
     }
 
-    public function test_guest_cannot_update_a_post(): void
+    public function test_legacy_post_write_routes_are_removed(): void
     {
         $post = $this->makePost();
 
-        $this->postJson("/api/posts/{$post->id}", [
-            'title' => 'Piraté',
-            'content' => 'Piraté',
-        ])->assertUnauthorized();
-
+        // L'édition des articles passe uniquement par /api/admin/posts (rôle admin requis)
+        $this->assertContains($this->postJson("/api/posts/{$post->id}", ['title' => 'Piraté'])->status(), [404, 405]);
+        $this->assertContains($this->postJson("/api/posts/upload-image/{$post->id}")->status(), [404, 405]);
         $this->assertSame('Article de test', $post->fresh()->title);
-    }
-
-    public function test_guest_cannot_upload_an_editor_image(): void
-    {
-        $post = $this->makePost();
-
-        $this->postJson("/api/posts/upload-image/{$post->id}")->assertUnauthorized();
-    }
-
-    public function test_authenticated_user_can_update_a_post_without_changing_its_slug(): void
-    {
-        $post = $this->makePost();
-        Sanctum::actingAs(User::factory()->create());
-
-        $this->postJson("/api/posts/{$post->id}", [
-            'title' => 'Nouveau titre',
-            'content' => '<p>Nouveau contenu</p>',
-        ])->assertOk();
-
-        $post->refresh();
-        $this->assertSame('Nouveau titre', $post->title);
-        $this->assertSame('article-de-test', $post->slug);
     }
 
     public function test_post_exposes_only_approved_comments_without_emails(): void
@@ -76,11 +52,14 @@ class ApiSecurityTest extends TestCase
         $this->assertStringNotContainsString('@example.com', $response->getContent());
     }
 
-    public function test_back_office_redirects_guests_to_login(): void
+    public function test_legacy_back_office_urls_redirect_to_the_next_admin(): void
     {
-        foreach (['/dashboard', '/posts/index', '/posts/create_edit', '/categories/index', '/categories/tags', '/profil'] as $url) {
-            $this->get($url)->assertRedirect(route('login'));
+        $admin = rtrim(config('app.admin_url'), '/');
+
+        foreach (['/dashboard' => '', '/posts/index' => '/articles', '/categories/tags' => '/categories', '/comments/index' => '/commentaires', '/newsletter/index' => '/newsletter', '/profil' => '/profil'] as $old => $new) {
+            $this->get($old)->assertRedirect($admin.$new);
         }
+        $this->get('/')->assertRedirect($admin);
     }
 
     public function test_unique_slug_is_suffixed_when_title_already_exists(): void

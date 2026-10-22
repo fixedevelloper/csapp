@@ -99,20 +99,9 @@ class SecurityHardeningTest extends TestCase
         $this->assertStringContainsString('&lt;script&gt;alert(1)&lt;/script&gt;', $html);
     }
 
-    public function test_logout_requires_post(): void
-    {
-        $user = User::factory()->create();
-
-        $this->actingAs($user)->get('/destroy')->assertMethodNotAllowed();
-        $this->assertAuthenticated();
-
-        $this->actingAs($user)->post('/destroy')->assertRedirect('/');
-        $this->assertGuest();
-    }
-
     public function test_security_headers_are_sent(): void
     {
-        $this->get('/')
+        $this->get('/up')
             ->assertHeader('X-Frame-Options', 'SAMEORIGIN')
             ->assertHeader('X-Content-Type-Options', 'nosniff')
             ->assertHeader('Referrer-Policy', 'strict-origin-when-cross-origin');

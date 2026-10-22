@@ -24,9 +24,9 @@ class AdminAccountTest extends TestCase
 
         $this->assertTrue(Hash::check('nouveau-secret-42', $admin->fresh()->password));
 
-        $this->post('/loginstore', ['email' => 'admin@example.com', 'password' => 'nouveau-secret-42'])
-            ->assertRedirect('dashboard');
-        $this->assertAuthenticatedAs($admin);
+        // Connexion à l'API d'administration (le back-office Next.js)
+        $this->postJson('/api/admin/login', ['email' => 'admin@example.com', 'password' => 'nouveau-secret-42'])
+            ->assertOk()->assertJsonPath('user.id', $admin->id);
     }
 
     public function test_command_can_create_missing_admin(): void

@@ -1,51 +1,25 @@
 <?php
 
-use App\Http\Controllers\Auth\AuthController;
-use App\Http\Controllers\CategoryController;
-use App\Http\Controllers\CommentController;
-use App\Http\Controllers\DashboardController;
-use App\Http\Controllers\NewsletterController;
-use App\Http\Controllers\PostController;
 use Illuminate\Support\Facades\Route;
 
-Route::middleware('guest')->group(function () {
-    Route::get('/', [AuthController::class, 'login'])
-        ->name('login');
-    Route::post('/loginstore', [AuthController::class, 'loginstore'])
-        ->name('loginstore');
-});
+/*
+ * Le back-office est désormais dans l'application Next.js (/admin). Ces routes ne servent plus qu'à
+ * rediriger les anciens liens vers les pages correspondantes ; le nom "login" reste défini car le
+ * middleware d'authentification de Laravel s'y réfère.
+ */
+$admin = fn (string $path = '') => rtrim(config('app.admin_url'), '/').$path;
 
-Route::middleware('auth')->group(function () {
-    Route::match(array('GET', 'POST'), '/profil', [AuthController::class, 'profil'])
-        ->name('profil');
-    Route::post('/destroy', [AuthController::class, 'destroy'])
-        ->name('destroy');
-    Route::match(array('GET', 'POST'), '/changeimage', [AuthController::class, 'changeimage'])
-        ->name('changeimage');
-    Route::post('/changepassword', [AuthController::class, 'changepassword'])
-        ->name('changepassword');
-    Route::match(array('GET', 'POST'), '/dashboard', [DashboardController::class, 'dashboard'])
-        ->name('dashboard');
-    Route::group(['prefix' => 'categories', 'as' => 'category.'],function () {
-        Route::match(array('GET', 'POST'), 'index', [CategoryController::class, 'index'])
-            ->name('index');
-        Route::match(array('GET', 'POST'), 'tags', [CategoryController::class, 'tags'])
-            ->name('tags');
-    });
-    Route::group(['prefix' => 'posts', 'as' => 'post.'],function () {
-        Route::match(array('GET', 'POST'), 'index', [PostController::class, 'index'])
-            ->name('index');
-        Route::match(array('GET', 'POST'), 'create_edit', [PostController::class, 'createOrEdit'])
-            ->name('create_edit');
-        Route::match(array('GET', 'POST'), 'edit/{id}', [PostController::class, 'edit'])
-            ->name('edit');
-    });
-    Route::get('comments/index', [CommentController::class, 'index'])
-        ->name('comment.index');
-    Route::group(['prefix' => 'newsletter', 'as' => 'newsletter.'],function () {
-        Route::get('index', [NewsletterController::class, 'index'])
-            ->name('index');
-        Route::get('export', [NewsletterController::class, 'export'])
-            ->name('export');
-    });
-});
+Route::get('/', fn () => redirect($admin()))->name('login');
+
+foreach ([
+    '/dashboard' => '',
+    '/profil' => '/profil',
+    '/posts/index' => '/articles',
+    '/posts/create_edit' => '/articles/nouveau',
+    '/categories/index' => '/categories',
+    '/categories/tags' => '/categories',
+    '/comments/index' => '/commentaires',
+    '/newsletter/index' => '/newsletter',
+] as $old => $new) {
+    Route::get($old, fn () => redirect($admin($new)));
+}
