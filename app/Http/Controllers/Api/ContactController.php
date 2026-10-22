@@ -11,11 +11,23 @@ use App\Models\Contact;
 use App\Models\Devis;
 use App\Support\DevisSchema;
 use Illuminate\Http\Request;
+use Illuminate\Mail\Mailable;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Mail;
 
 class ContactController extends Controller
 {
+    // Envoi immédiat (sans file d'attente, qui exige un worker en production) ; un échec SMTP est journalisé
+    // sans faire perdre la demande, déjà enregistrée en base et visible dans l'admin
+    private function notify(string $to, Mailable $mail): void
+    {
+        try {
+            Mail::to($to)->send($mail);
+        } catch (\Throwable $e) {
+            report($e);
+        }
+    }
+
     public function store(Request $request)
     {
         $validated = $request->validate([
@@ -36,7 +48,7 @@ class ContactController extends Controller
             'user_agent' => $request->userAgent(),
         ]);
 
-        Mail::to(config('mail.recipients.contact'))->send(new ContactSubmitted($contact));
+        $this->notify(config('mail.recipients.contact'), new ContactSubmitted($contact));
 
         return response()->json([
             'success' => true,
@@ -76,7 +88,7 @@ class ContactController extends Controller
             'user_agent'   => $request->userAgent(),
         ]);
 
-        Mail::to(config('mail.recipients.devis'))->send(new DevisSubmitted($devis));
+        $this->notify(config('mail.recipients.devis'), new DevisSubmitted($devis));
         return response()->json([
             'message' => 'Votre demande de devis a été envoyée avec succès.',
             'devis_id' => $devis->id,

@@ -36,7 +36,7 @@ class DevisGuidedFormTest extends TestCase
         $this->assertNull($d->description);
         $this->assertSame('1 à 3 mois', $d->deadline);
         $this->assertSame(['Blog', 'Multilingue'], $d->details['features']);
-        Mail::assertQueued(DevisSubmitted::class);
+        Mail::assertSent(DevisSubmitted::class);
     }
 
     public function test_unknown_detail_keys_are_dropped(): void

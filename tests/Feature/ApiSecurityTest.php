@@ -90,7 +90,7 @@ class ApiSecurityTest extends TestCase
             'message' => 'Bonjour',
         ])->assertOk();
 
-        Mail::assertQueued(ContactSubmitted::class, fn ($mail) => $mail->hasTo('contact@test.local'));
+        Mail::assertSent(ContactSubmitted::class, fn ($mail) => $mail->hasTo('contact@test.local'));
     }
 
     public function test_devis_honeypot_rejects_bots(): void
@@ -123,6 +123,6 @@ class ApiSecurityTest extends TestCase
             'description' => 'Un site pour mon entreprise',
         ])->assertOk();
 
-        Mail::assertQueued(DevisSubmitted::class, fn ($mail) => $mail->hasTo('devis@test.local'));
+        Mail::assertSent(DevisSubmitted::class, fn ($mail) => $mail->hasTo('devis@test.local'));
     }
 }
