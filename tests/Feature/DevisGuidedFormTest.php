@@ -90,4 +90,19 @@ class DevisGuidedFormTest extends TestCase
         $this->assertStringContainsString('Fonctionnalités', $html);
         $this->assertStringContainsString('Blog, Multilingue', $html);
     }
+
+    public function test_client_confirmation_recaps_the_request_and_escapes_name(): void
+    {
+        $d = Devis::create($this->payload([
+            'name' => '<b>Jean</b>',
+            'budget' => '1M – 5M FCFA',
+            'details' => ['site_kind' => 'Nouveau site'],
+        ]));
+
+        $html = (new \App\Mail\DevisConfirmation($d))->build()->render();
+
+        $this->assertStringContainsString('1M – 5M FCFA', $html);
+        $this->assertStringContainsString('Nouveau site', $html);
+        $this->assertStringNotContainsString('<b>Jean</b>', $html);
+    }
 }

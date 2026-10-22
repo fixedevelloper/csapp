@@ -4,7 +4,9 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Mail\ContactConfirmation;
 use App\Mail\ContactSubmitted;
+use App\Mail\DevisConfirmation;
 use App\Mail\DevisSubmitted;
 use App\Models\Comment;
 use App\Models\Contact;
@@ -49,6 +51,7 @@ class ContactController extends Controller
         ]);
 
         $this->notify(config('mail.recipients.contact'), new ContactSubmitted($contact));
+        $this->notify($contact->email, new ContactConfirmation($contact));
 
         return response()->json([
             'success' => true,
@@ -89,6 +92,7 @@ class ContactController extends Controller
         ]);
 
         $this->notify(config('mail.recipients.devis'), new DevisSubmitted($devis));
+        $this->notify($devis->email, new DevisConfirmation($devis));
         return response()->json([
             'message' => 'Votre demande de devis a été envoyée avec succès.',
             'devis_id' => $devis->id,

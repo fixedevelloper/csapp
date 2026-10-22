@@ -91,6 +91,7 @@ class ApiSecurityTest extends TestCase
         ])->assertOk();
 
         Mail::assertSent(ContactSubmitted::class, fn ($mail) => $mail->hasTo('contact@test.local'));
+        Mail::assertSent(\App\Mail\ContactConfirmation::class, fn ($mail) => $mail->hasTo('client@example.com'));
     }
 
     public function test_devis_honeypot_rejects_bots(): void
@@ -124,5 +125,6 @@ class ApiSecurityTest extends TestCase
         ])->assertOk();
 
         Mail::assertSent(DevisSubmitted::class, fn ($mail) => $mail->hasTo('devis@test.local'));
+        Mail::assertSent(\App\Mail\DevisConfirmation::class, fn ($mail) => $mail->hasTo('client@example.com'));
     }
 }
